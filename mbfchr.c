@@ -23,7 +23,7 @@ main(int argc, char *argv[])
         fprintf(stderr, "Failed to load font '%s'.\n", argv[1]);
         return 1;
     }
-    code = (uint16_t) atoi(argv[2]);
+    code = (uint16_t) strtoul(argv[2], NULL, 0);
     index = search_glyph(font, code);
     if (index == -1) {
         fprintf(stderr, "Glyph not found.\n");
