@@ -133,9 +133,11 @@ main(int argc, char *argv[])
     Range *charset, *range;
     Header hd;
     uint16_t offset, length;
-    int n, i, j;
+    int n, i, j, k;
     int fd;
-    int stride;
+    int canvas_stride, glyph_stride;
+    int gw, gh, gx, gy;
+    uint8_t *canvas;
 
     if (argc != 3) {
         fprintf(stderr, "usage: %s input.bdf output.mbf\n", argv[0]);
@@ -171,7 +173,12 @@ main(int argc, char *argv[])
         write(fd, &offset, 2);
         write(fd, &length, 2);
     }
-    stride = (md.w >> 3) + !!(md.w & 7);
+    canvas_stride = (md.w >> 3) + !!(md.w & 7);
+    canvas = malloc(md.h * canvas_stride);
+    if (canvas == NULL) {
+        fprintf(stderr, "could not allocate memory\n");
+        return 1;
+    }
     rewind(fp);
     for (n = 0; n < md.n; n++) {
         uint16_t code;
@@ -179,16 +186,28 @@ main(int argc, char *argv[])
         char hex[3] = {0};
         get_val(fp, "ENCODING");
         sscanf(sval, "%" SCNu16, &code);
+        get_val(fp, "BBX");
+        sscanf(sval, "%d %d %d %d", &gw, &gh, &gx, &gy);
+        gx -= md.x;
+        gy -= md.y;
+        gy = md.h - gy - gh;
+        glyph_stride = (gw >> 3) + !!(gw & 7);
         get_val(fp, "BITMAP");
-        for (i = 0; i < md.h; i++) {
-            for (j = 0; j < stride; j++) {
+        memset(canvas, 0, md.h * canvas_stride);
+        for (i = 0; i < gh; i++) {
+            for (j = 0; j < glyph_stride; j++) {
                 fread(hex, 1, 2, fp);
                 byte = (uint8_t) strtol(hex, NULL, 16);
-                write(fd, &byte, 1);
+                k = gx / 8 + j + (gy + i) * canvas_stride;
+                canvas[k] |= byte >> (gx % 8);
+                if (gx % 8 != 0 && gx / 8 + j + 1 < canvas_stride)
+                    canvas[k + 1] |= byte << (7 - gx % 8);
             }
             fseek(fp, 1, SEEK_CUR); /* skip newline */
         }
+        write(fd, canvas, md.h * canvas_stride);
     }
+    free(canvas);
     fclose(fp);
     close(fd);
     free(charset);
