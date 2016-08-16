@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 typedef struct Header {
     uint16_t ng;
     uint8_t w, h;
