@@ -38,5 +38,6 @@ main(int argc, char *argv[])
         putchar('\n');
         row += font->stride;
     }
+    free(font);
     return 0;
 }

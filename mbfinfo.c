@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "mbf.h"
 
@@ -19,5 +20,6 @@ main(int argc, char *argv[])
     printf("chars %u\n", font->header.ng);
     printf("width %u\n", font->header.w);
     printf("height %u\n", font->header.h);
+    free(font);
     return 0;
 }
