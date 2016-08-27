@@ -1,4 +1,4 @@
-targets = mbfinfo mbfchr bdf2mbf
+targets = mbfinfo mbfchr bdf2mbf mbf2fnt
 
 all: $(targets)
 
@@ -10,6 +10,9 @@ mbfchr: mbf.h mbf.c mbfchr.c
 
 bdf2mbf: bdf2mbf.c
 	$(CC) $(CFLAGS) -o $@ bdf2mbf.c
+
+mbf2fnt: mbf.h mbf.c mbf2fnt.c
+	$(CC) $(CFLAGS) -o $@ mbf.c mbf2fnt.c
 
 clean:
 	$(RM) $(targets)
