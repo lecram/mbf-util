@@ -88,10 +88,9 @@ comp_int(const void *a, const void *b)
 Range *
 bdf_charset(FILE *fp, Metadata *md)
 {
-    int i, prev;
+    int i, nr, cur, prev;
     int *codes;
     Range *range, *charset;
-    int nr = 0; /* number of contiguous subsets (a.k.a. ranges) */
 
     if (!md->n)
         bdf_info(fp, md);
@@ -102,16 +101,17 @@ bdf_charset(FILE *fp, Metadata *md)
     }
     qsort(codes, md->n, sizeof(*codes), comp_int);
     prev = -2; /* make sure prev + 1 is not a valid code */
+    nr = 0;
     for (i = 0; i < md->n; i++) {
-        int cur = codes[i];
+        cur = codes[i];
         if (cur != prev + 1)
             nr++;
         prev = cur;
     }
-    range = charset = malloc((nr + 1) * sizeof(*charset));
+    range = charset = malloc((nr + 1) * sizeof(*range));
     range->first = prev = codes[0];
     for (i = 1; i < md->n; i++) {
-        int cur = codes[i];
+        cur = codes[i];
         if (cur != prev + 1) {
             range->last = prev;
             range++;
