@@ -132,7 +132,6 @@ main(int argc, char *argv[])
     Metadata md;
     Range *charset, *range;
     Header hd;
-    uint16_t offset, length;
     int n, i, j, k;
     int fd;
     int canvas_stride, glyph_stride;
@@ -153,7 +152,7 @@ main(int argc, char *argv[])
         return 1;
     }
     range = charset = bdf_charset(fp, &md);
-    fd = creat(argv[2], 0644);
+    fd = creat(argv[2], 0666);
     if (fd == -1) {
         fprintf(stderr, "could not create file %s\n", argv[2]);
         return 1;
@@ -168,8 +167,8 @@ main(int argc, char *argv[])
     };
     write(fd, &hd, sizeof(hd));
     for (range = charset; range->first >= 0; range++) {
-        offset = (uint16_t) range->first;
-        length = (uint16_t) (range->last - range->first + 1);
+        uint16_t offset = (uint16_t) range->first;
+        uint16_t length = (uint16_t) (range->last - range->first + 1);
         write(fd, &offset, 2);
         write(fd, &length, 2);
     }
