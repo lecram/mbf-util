@@ -2,6 +2,7 @@ mbfinfo
 mbfchr
 bdf2mbf
 mbf2fnt
+fnt2mbf
 *.mbf
 *.bdf
 *.swp
