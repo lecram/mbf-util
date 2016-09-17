@@ -1,5 +1,11 @@
 #! /bin/sh
 
+if [ "$#" -ne 2 ]
+then
+    printf "%s\n" "usage: $0 fntdir string" >&2
+    exit 1
+fi
+
 printf "$2" |
 sed -e "s:\(.\):\"\'\1\"\n:g" |
 xargs -n 1 printf "%s/U+%04X\\n" "$1" |
