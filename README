@@ -1,0 +1,74 @@
+mbf-util -- Bitmap font utilities
+=================================
+
+This is a set  of command-line tools intended to make  it easy to handle
+bitmap fonts in the MBF format.
+
+It is  possible to convert  fonts from the  popular BDF format  into MBF
+fonts using the bdf2mbf program.
+
+```
+$ bdf2mbf font.bdf font.mbf
+```
+
+The mbfinfo program outputs basic information about an MBF file.
+
+```
+$ mbfinfo font.mbf
+chars 191
+width 6
+height 11
+```
+
+Two other converters can be used to edit glyphs as plain text:
+
+```
+$ mbf2fnt font-6x11.mbf         # extract glyphs to a new folder "6x11"
+$ $EDITOR 6x11/U+0026           # edit ampersand glyph as plain text
+$ fnt2mbf 6x11 font-6x11.mbf    # rewrite MBF file with new design
+$ rm -rf 6x11                   # remove plain text glyphs when done
+```
+
+The helper script  fntstr can be used to check  the plain-text design at
+any time.
+
+```
+$ fntstr 6x11 'foo & bar'
+
+                                                      
+  XX                                X                 
+ X                       XX         X                 
+ X                      X  X        X                 
+ XXX   XXX   XXX        X X         X XX   XXX  X XX  
+ X    X   X X   X        X          XX  X     X XX  X 
+ X    X   X X   X       X X X       X   X  XXXX X     
+ X    X   X X   X       X  X        X   X X   X X     
+ X     XXX   XXX         XX X       XXXX   XXXX X     
+                                                      
+                                                      
+```
+
+Finally, to  see a  single glyph  from an  MBF file  as plain  text, the
+mbfchr program can be used.
+
+```
+$ mbfchr font.mbf 0x26
+
+      
+      
+ ##   
+#  #  
+# #   
+ #    
+# # # 
+#  #  
+ ## # 
+      
+      
+```
+
+Copying
+-------
+
+All of the  source code and documentation for mbf-util  is released into
+the public domain and provided without warranty of any kind.
