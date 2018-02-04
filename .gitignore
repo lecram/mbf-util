@@ -3,6 +3,8 @@ mbfchr
 bdf2mbf
 mbf2fnt
 fnt2mbf
+mbf2psf
 *.mbf
 *.bdf
+*.psf
 *.swp
